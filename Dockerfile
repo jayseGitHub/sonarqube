@@ -15,9 +15,11 @@ ENV SONAR_SCANNER_PACKAGE sonar-scanner-${SONAR_SCANNER_VERSION}.zip
 # Http port
 EXPOSE 9000
 
-RUN export http_proxy=http://proxy:3128 \
-    && export https_proxy=$http_proxy \
-    && set -x \
+# If Proxy add
+# export http_proxy=http://proxy:3128 \
+#    && export https_proxy=$http_proxy
+    
+RUN set -x \
     && cd /opt \
     && wget https://sonarsource.bintray.com/Distribution/sonarqube/sonarqube-$SONAR_VERSION.zip \
     && unzip sonarqube-$SONAR_VERSION.zip \
@@ -25,9 +27,7 @@ RUN export http_proxy=http://proxy:3128 \
     && rm sonarqube-$SONAR_VERSION.zip* \
     && rm -rf $SONARQUBE_HOME/bin/*
 
-RUN export http_proxy=http://proxy:3128 \
-  && export https_proxy=$http_proxy \
-  && wget https://sonarsource.bintray.com/Distribution/sonar-php-plugin/sonar-php-plugin-2.9.1.1705.jar \
+RUN wget https://sonarsource.bintray.com/Distribution/sonar-php-plugin/sonar-php-plugin-2.9.1.1705.jar \
   && mv sonar-php-plugin-2.9.1.1705.jar $SONARQUBE_HOME/extensions/plugins/ \
   && wget https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/${SONAR_SCANNER_PACKAGE} \
   && unzip ${SONAR_SCANNER_PACKAGE} \
